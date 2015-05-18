@@ -2,24 +2,30 @@
 using namespace std;
 
 #include "dagengine.h"
-#include "operations.h"
+#include "all_ops.h"
 
-extern DAGEngine * engine = new SingleThreadDAGEngine;
+DAGEngine * engine = new SingleThreadDAGEngine;
+StorageManager * storage = new NaiveStorageManager;
 
 int main()
 {
-  /*DAGEngine * engine = new SingleThreadDAGEngine;
-  for (int i = 0; i < 10; i++)
-  {
-    NodeId nodeId = engine->PushNode([i](){cout << "executing " << i << endl; }, std::vector<NodeId>{ NodeId(i-1) });
-  }*/
+  const static int M = 1024;
+  const static int N = 512;
+  const static int K = 1000;
+  FloatT delta = 0.24;
+  FloatT * customA = new FloatT[M * N];
+  DummyLayer layer(delta);
+  NArray layerIn({M, N}, customA);
+  NArray layerOut({ M, N });
+  FF({ layerIn }, { &layerOut }, &layer);
+  NArray x = layerIn + layerOut;
+  WaitForAll();
 
-  NArray a, b;
-  a.scale = { 3, 2 };
-  b.scale = { 3, 2 };
-
-  NArray c = Add(a, b);
-
+  NArray a({ 1024, 768 });
+  NArray b({ 1024, 768 });
+  NArray c({ 1024, 768 });
+  NArray d = a + b + c;
 
   return 0;
 }
+

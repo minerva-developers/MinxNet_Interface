@@ -46,5 +46,7 @@ public:
   void WaitForAll() override
   {}
 private:
-  NodeId currNodeId = 0;
+  NodeId currNodeId = 1;  // default dependency id starts from 0
 };
+
+inline void WaitForAll() {}
